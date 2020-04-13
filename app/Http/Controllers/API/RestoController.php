@@ -37,10 +37,11 @@ class RestoController extends Controller
                 $data['nama']=$value->nama;
                 $data['lat']=$value->lat;
                 $data['lng']=$value->lng;
+                $data['phone']=$value->phone;
                 if (empty($value->gambar_resto)) {
                     $data['gambar_resto']='0';
                 } else {
-                    $data['gambar_resto']='http://192.168.43.71/slc/public/fotorestoran/'.$value->gambar_resto;
+                    $data['gambar_resto']= url('/').'/fotorestoran/'.$value->gambar_resto;
                 }
                 $data['alamat']=$value->alamat;
                 $data['status']=$value->status;
@@ -60,15 +61,15 @@ class RestoController extends Controller
         $harga = $request->harga;
 
         if (!empty($lat)||!empty($lng)) {
-            $recom = DB::select("SELECT id_menu, id_resto, lat_resto, lng_resto, nama_resto, nama_menu, distance, harga_menu, gambar_menu, alamat, status, rating, menu_deskripsi
-        From (SELECT restos.id as id_resto, menus.gambar_menu as gambar_menu, menus.status as status, restos.alamat as alamat, menus.rating as rating, menus.menu_deskripsi as menu_deskripsi,menus.suspend as suspend,
-          restos.nama as nama_resto,menus.id as id_menu, menus.nama_menu as nama_menu, restos.status as resto_status,restos.deleted as resto_deleted, menus.deleted as deleted,
+            $recom = DB::select("SELECT id_menu, id_resto, lat_resto, lng_resto, nama_resto, nama_menu, distance, harga_menu, phone, gambar_menu, alamat, status, rating, menu_deskripsi, gambar_resto
+        From (SELECT restos.id as id_resto, menus.gambar_menu as gambar_menu, restos.gambar_resto as gambar_resto, menus.status as status, restos.alamat as alamat, menus.rating as rating, menus.menu_deskripsi as menu_deskripsi,menus.suspend as suspend,
+          restos.nama as nama_resto,menus.id as id_menu, menus.nama_menu as nama_menu, restos.phone as phone,restos.status as resto_status,restos.deleted as resto_deleted, menus.deleted as deleted,
           menus.harga as harga_menu, restos.lat as lat_resto, restos.lng as lng_resto, Round((6371000 * acos (cos (radians(".$lat."))*
           cos(radians(lat))* cos( radians(".$lng.") - radians(lng) )+ sin (radians(".$lat.") )*
           sin(radians(lat)))),2) AS distance FROM restos INNER JOIN menus ON restos.id = menus.id_resto
           ORDER BY menus.harga ASC, distance ASC) AS InnerQuery WHERE distance <= ".$req_jarak."  AND status='1' AND resto_status='1'
           AND resto_deleted='0' AND deleted='0' AND suspend='0'
-          AND harga_menu <= ".$harga." AND (nama_menu LIKE '%".$req_nama."%' OR menu_deskripsi LIKE '%".$req_nama."%')
+          AND harga_menu <= ".$harga." AND (nama_menu LIKE '%".$req_nama."%' OR menu_deskripsi LIKE '%".$req_nama."%' OR nama_resto LIKE '%".$req_nama."%')
           ORDER BY distance ASC, harga_menu ASC LIMIT ".$row);
             if (sizeof($recom)==0) {
                 return response()->json(['status'=>'error','data'=>'Maaf, Restoran yang sesuai dengan Kriteria Anda Tidak Tersedia'], 404);
@@ -83,6 +84,7 @@ class RestoController extends Controller
                     $data['nama_menu']=$value->nama_menu;
                     $data['distance']=$value->distance;
                     $data['harga_menu']=$value->harga_menu;
+                    $data['phone']=$value->phone;
                     if (empty($value->menu_deskripsi)) {
                         $data['menu_deskripsi']='0';
                     } else {
@@ -91,8 +93,13 @@ class RestoController extends Controller
                     if (empty($value->gambar_menu)) {
                         $data['gambar_menu']='0';
                     } else {
-                        $data['gambar_menu']='http://192.168.43.71/slc/public/fotomenu/'.$value->gambar_menu;
+                        $data['gambar_menu']= url('/').'/fotomenu/'.$value->gambar_menu;
                     }
+                    if (empty($value->gambar_resto)) {
+                    $data['gambar_resto']='0';
+                } else {
+                    $data['gambar_resto']= url('/').'/fotorestoran/'.$value->gambar_resto;
+                }
                     $data['status']=$value->status;
                     $data['rating']=$value->rating;
                     $data1[] = $data;

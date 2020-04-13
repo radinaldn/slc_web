@@ -28,6 +28,8 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('update', 'API\UserController@update');
     Route::post('backup', 'API\UserController@backup');
     Route::get('logout', 'API\UserController@logout');
+    Route::get('test', 'API\UserController@test');
+
   // Resto
     Route::post('resto/create','API\RestoController@create');
     Route::get('resto','API\RestoController@show');
@@ -49,6 +51,12 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('review/update','API\ReviewController@update');
     Route::post('review/delete','API\ReviewController@delete');
 
+    Route::post('promo/create','API\MenuController@addPromo');
+    Route::post('promo','API\MenuController@getPromo');
+    Route::post('promo/delete','API\MenuController@deletePromo');
+    Route::post('promo/update','API\MenuController@updatePromo');
+    Route::post('promo/single','API\MenuController@getSinglePromo');
+    
     Route::post('report','API\ReportController@sendReport');
     Route::get('report/get','API\ReportController@getReport');
     Route::post('report/getcomment','API\ReportController@getReportedComment');

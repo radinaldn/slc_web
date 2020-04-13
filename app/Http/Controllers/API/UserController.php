@@ -30,7 +30,7 @@ class UserController extends Controller
             if (empty($user->sqlite_backup)) {
               $success['sqlite_backup'] =  "0";
             }else{
-              $success['sqlite_backup'] = 'http://192.168.43.71/slc/public/sqlite_backup/'.$user->sqlite_backup;
+              $success['sqlite_backup'] = url('/').'/sqlite_backup/'.$user->sqlite_backup;
             }
             $success['token'] =  $user->createToken('nApp')->accessToken;
             return response()->json(['success' => $success], $this->successStatus);
@@ -202,5 +202,12 @@ class UserController extends Controller
         $user->notify(new PasswordResetSuccess($passwordReset));
 
         return response()->json($user);
+    }
+
+    public function test()
+    {
+        return response()->json([
+            'message' => 'This password reset token is invalid.'
+        ], 200);
     }
 }

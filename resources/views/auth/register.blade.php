@@ -99,7 +99,7 @@
                     Daftar Akun Admin
                   </h1>
                   <h2 class="h6 font-w400 text-muted mb-3">
-                    Jadilah Admin Untuk Mengelola Komunitas
+                    Jadilah Admin Untuk Mengelola Komunitas 
                   </h2>
                   @if ($errors->any())
                   @foreach ($errors->all() as $error)

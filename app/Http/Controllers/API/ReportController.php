@@ -45,7 +45,7 @@ class ReportController extends Controller
                 if (empty($value->gambar_menu)) {
                     $data['gambar_menu']='0';
                 } else {
-                    $data['gambar_menu']='http://192.168.43.71/slc/public/fotomenu/'.$value->gambar_menu;
+                    $data['gambar_menu']= url('/').'/fotomenu/'.$value->gambar_menu;
                 }
                 if (empty($value->menu_deskripsi)) {
                     $data['menu_deskripsi']='0';
@@ -67,6 +67,7 @@ class ReportController extends Controller
             ->join('users', 'reports.id_user', '=', 'users.id')
             ->select('users.name', 'reports.*')
             ->where('reports.id_menu', $request->id_menu)
+            ->orderBy('reports.tanggal', 'DESC')
             ->get();
       if ($user->isEmpty()) {
         return response()->json(['status'=>'success','data'=>'Tidak Ada Laporan Terhadap Menu'], 404);
